@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Font Previewer</title>
+    <title>ColCon</title>
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -18,34 +18,50 @@
         #custom-font-style {
             display: none;
         }
+
+        .pass {
+            color: green;
+        }
+
+        .fail {
+            color: red;
+        }
+
+        #params {
+            color: inherit;
+        }
+
     </style>
     <style id="custom-font-style"></style>
 </head>
 <body>
-    <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 0; left: 0;">
-        <label for="background-color-input" style="margin-top: 0.7vh;">Background color:</label>
-        <input type="color" id="background-color-input" oninput="changeBackgroundColor()" value="#ffffff">
-    </div>
+    <div id="params">
+        <h1>ColCon</h1>
+        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 0; left: 0;">
+            <label for="background-color-input" style="margin-top: 0.7vh;">Background color:</label>
+            <input type="color" id="background-color-input" oninput="changeBackgroundColor()" value="#ffffff">
+        </div>
 
-    <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 30px; left: 0;">
-        <label for="foreground-color-input" style="margin-top: 0.7vh;">Foreground color:</label>
-        <input type="color" id="foreground-color-input" oninput="changeForegroundColor()" value="#ffffff">
-    </div>
+        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 30px; left: 0;">
+            <label for="foreground-color-input" style="margin-top: 0.7vh;">Foreground color:</label>
+            <input type="color" id="foreground-color-input" oninput="changeForegroundColor()" value="#ffffff">
+        </div>
 
-    <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 60px; left: 0;">
-        <label for="font-size-slider">Font size:</label>
-        <input type="range" id="font-size-slider" min="10" max="50" value="30" oninput="changeFontSize()">
-    </div>
-    
-    <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 90px; left: 0;">
-        <label for="font-file">Font Family:</label>
-        <input type="file" id="font-file" accept=".ttf,.otf,.woff,.woff2" onchange="loadCustomFont()">
-    </div>
+        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 60px; left: 0;">
+            <label for="font-size-slider">Font size:</label>
+            <input type="range" id="font-size-slider" min="10" max="50" value="30" oninput="changeFontSize()">
+        </div>
 
-    <div style="position: absolute; top: 120px; left: 0;">
-        <p id="luminance-output"></p>
-    </div>
+        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 90px; left: 0;">
+            <label for="font-file">Font Family:</label>
+            <input type="file" id="font-file" accept=".ttf,.otf,.woff,.woff2" onchange="loadCustomFont()">
+        </div>
 
+        <div style="position: absolute; top: 120px; left: 0;">
+            <p id="luminance-output"></p>
+            <p id="contrast-result"></p>
+        </div>
+    </div>
     <p id="content" style="font-family: inherit; font-size: 30px; outline: none;" contenteditable>The quick brown fox jumps over the lazy dog</p>
 
     <script>
@@ -58,12 +74,14 @@
             const color = document.getElementById('background-color-input').value;
             document.body.style.backgroundColor = color;
             updateLuminanceValue();
+            checkContrastRatio();
         }
 
         function changeForegroundColor() {
             const color = document.getElementById('foreground-color-input').value;
             document.getElementById('content').style.color = color;
             updateLuminanceValue();
+            checkContrastRatio();
         }
 
         function getLuminance(id){
@@ -97,6 +115,21 @@
             luminanceOutput.innerHTML = `Background luminance: ${backgroundLuminance.toFixed(3)}<br>
 Foreground luminance: ${foregroundLuminance.toFixed(3)}<br>
 Contrast ratio: ${contrastRatio.toFixed(3)}`;
+        }
+
+        function checkContrastRatio() {
+            const contrastRatio = contrast_ratio();
+            const contrastResultEl = document.getElementById('contrast-result');
+
+            if (contrastRatio >= 4.5) {
+                contrastResultEl.textContent = 'Contrast ratio passes WCAG 2.1 AA standards.';
+                contrastResultEl.classList.remove('fail');
+                contrastResultEl.classList.add('pass');
+            } else {
+                contrastResultEl.textContent = 'Contrast ratio fails WCAG 2.1 AA standards.';
+                contrastResultEl.classList.remove('pass');
+                contrastResultEl.classList.add('fail');
+            }
         }
 
         function loadCustomFont() {
