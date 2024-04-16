@@ -48,8 +48,8 @@
         </div>
 
         <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 60px; left: 0;">
-            <label for="font-size-slider">Font size:</label>
-            <input type="range" id="font-size-slider" min="10" max="50" value="30" oninput="changeFontSize()">
+            <label for="font-size-input">Font size (pt):</label>
+            <input type="number" id="font-size-input" min="10" max="50" value="30" oninput="changeFontSize()">
         </div>
 
         <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 90px; left: 0;">
@@ -66,8 +66,8 @@
 
     <script>
         function changeFontSize() {
-            const fontSize = document.getElementById('font-size-slider').value;
-            document.getElementById('content').style.fontSize = fontSize + 'px';
+            const fontSize = document.getElementById('font-size-input').value;
+            document.getElementById('content').style.fontSize = fontSize + 'pt';
         }
 
         function changeBackgroundColor() {
@@ -113,24 +113,39 @@
 
             const luminanceOutput = document.getElementById('luminance-output');
             luminanceOutput.innerHTML = `Background luminance: ${backgroundLuminance.toFixed(3)}<br>
-Foreground luminance: ${foregroundLuminance.toFixed(3)}<br>
-Contrast ratio: ${contrastRatio.toFixed(3)}`;
+            Foreground luminance: ${foregroundLuminance.toFixed(3)}<br>
+            Contrast ratio: ${contrastRatio.toFixed(3)}`;
         }
 
         function checkContrastRatio() {
             const contrastRatio = contrast_ratio();
             const contrastResultEl = document.getElementById('contrast-result');
+            const paramsDiv = document.getElementById('params');
 
-            if (contrastRatio >= 4.5) {
-                contrastResultEl.textContent = 'Contrast ratio passes WCAG 2.1 AA standards.';
-                contrastResultEl.classList.remove('fail');
-                contrastResultEl.classList.add('pass');
-            } else {
-                contrastResultEl.textContent = 'Contrast ratio fails WCAG 2.1 AA standards.';
-                contrastResultEl.classList.remove('pass');
-                contrastResultEl.classList.add('fail');
-            }
+            const AA_Large_Text = 3;
+            const AA_Normal_Text = 4.5;
+            const AA_Graphic_Components = 3;
+            const AAA_Large_Text = 4.5;
+            const AAA_Normal_Text = 7;
+            const AAA_Graphic_Components = 4.5;
+
+            let results = ''; // Store results dynamically
+
+            // Check each condition separately and append tick marks
+            results += contrastRatio >= AAA_Graphic_Components ? '✔️ AAA Graphic Components<br>' : '❌ AAA Graphic Components<br>';
+            results += contrastRatio >= AA_Graphic_Components ? '✔️ AA Graphic Components<br>' : '❌ AA Graphic Components<br>';
+            results += contrastRatio >= AAA_Large_Text ? '✔️ AAA Large Text<br>' : '❌ AAA Large Text<br>';
+            results += contrastRatio >= AA_Normal_Text ? '✔️ AA Normal Text<br>' : '❌ AA Normal Text<br>';
+            results += contrastRatio >= AA_Large_Text ? '✔️ AA Large Text<br>' : '❌ AA Large Text<br>';
+            results += contrastRatio >= AAA_Normal_Text ? '✔️ AAA Normal Text<br>' : '❌ AAA Normal Text<br>';
+
+            contrastResultEl.innerHTML = results; // Update contrast result
+            paramsDiv.style.color = contrastRatio >= AA_Large_Text ? 'green' : 'red'; // Update text color based on AA Large Text standard
         }
+
+
+
+
 
         function loadCustomFont() {
             const fontFile = document.getElementById('font-file').files[0];
