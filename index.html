@@ -31,11 +31,6 @@
             color: inherit;
         }
 
-        .params-container {
-            display: none;
-             /* Initially hide the params container */  
-        }
-
         #flip-button {
             position: absolute;
             top: 30px;
@@ -47,45 +42,73 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
+        .color-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-container input[type="color"] {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border: none;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .color-container .hex-code {
+            cursor: pointer;
+        }
+
     </style>
     <style id="custom-font-style"></style>
 </head>
 <body>
-    <div id="params" class="params-container">
-        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 30px; left: 30px;">
+    <div id="params">
+        <div class="color-container" style="position: absolute; top: 30px; left: 30px;">
             <label for="background-color-input" style="margin-top: 0.7vh;">Background color:</label>
-            <input type="color" id="background-color-input" oninput="changeBackgroundColor()" value="#ffffff">
+            <br>
+            <div class="color-box">
+                <input type="color" class="color-input" id="background-color-input" oninput="changeBackgroundColor()" value="#DB592A">
+                <span class="hex-code" onclick="copyHexCode('background-color-input')">#ffffff</span>
+            </div>
         </div>
-
-        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 60px; left: 30px;">
+        
+        <div class="color-container" style="position: absolute; top: 80px; left: 30px;">
             <label for="foreground-color-input" style="margin-top: 0.7vh;">Text color:</label>
-            <input type="color" id="foreground-color-input" style="outline: none;" oninput="changeForegroundColor()" value="#ffffff">
+            <br>
+            <div class="color-box">
+                <input type="color" class="color-input" id="foreground-color-input" oninput="changeForegroundColor()" value="#DB592A">
+                <span class="hex-code" onclick="copyHexCode('foreground-color-input')">#ffffff</span>
+            </div>
         </div>
-
         <button id="flip-button">Flip Colors</button>
-
-        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 90px; left: 30px;">
+        
+        <br>
+        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 140px; left: 30px;">
             <label for="font-size-input">Font size (pt):</label>
             <input type="number" id="font-size-input" min="10" max="50" value="30" oninput="changeFontSize()">
         </div>
-
-        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 120px; left: 30px;">
+        <br>
+        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 170px; left: 30px;">
             <label for="font-file">Font Family:</label>
             <input type="file" id="font-file" accept=".ttf,.otf,.woff,.woff2" onchange="loadCustomFont()">
         </div>
 
-        <div style="position: absolute; top: 120px; left: 30px;">
+        <div style="position: absolute; top: 170px; left: 30px;">
             <br>
             <p id="luminance-output"></p>
             <p id="contrast-result"></p>
         </div>
         
-        <div style="position: absolute; top: 90px; right: 30px;">
+        <div style="position: absolute; top: 80px; right: 30px;">
             <table style="border-collapse: collapse;">
                 <thead>
                     <tr>
                         <th style="padding: 8px; border: 1px solid #ccc;">Level</th>
-                        <th style="padding: 8px; border: 1px solid #ccc;">Graphic Components</th>
+                        <th style="padding: 8px; border: 1px solid #ccc;">Graphics</th>
                         <th style="padding: 8px; border: 1px solid #ccc;">Large Text</th>
                         <th style="padding: 8px; border: 1px solid #ccc;">Normal Text</th>
                     </tr>
@@ -107,7 +130,7 @@
             </table>
         </div>
     </div>
-    <p id="content" style="font-family: inherit; font-size: 40px;text-align: center; outline: none;" contenteditable>The quick brown fox jumps over the lazy dog <br>♠︎♣♥︎♦︎</p>
+    <p id="content" style="font-family: inherit; font-size: 40px;text-align: center; outline: none;" contenteditable>The quick brown fox jumps over the lazy dog <br>♠︎♣︎♥︎♦︎</p>
 
     <script>
         let currentBackgroundColor = '#ffffff';
@@ -124,6 +147,7 @@
             currentBackgroundColor = color;
             updateLuminanceValue();
             checkContrastRatio();
+            updateHexCode('background-color-input', color);
         }
 
         function changeForegroundColor() {
@@ -132,6 +156,7 @@
             currentForegroundColor = color;
             updateLuminanceValue();
             checkContrastRatio();
+            updateHexCode('foreground-color-input', color);
         }
 
         function getLuminance(id){
@@ -205,6 +230,8 @@
 
             updateLuminanceValue();
             checkContrastRatio();
+            updateHexCode('background-color-input', currentBackgroundColor);
+            updateHexCode('foreground-color-input', currentForegroundColor);
         });
 
         function loadCustomFont() {
@@ -262,15 +289,16 @@
             }
         }
 
-        document.addEventListener('mousemove', function() {
-            document.querySelector('.params-container').style.display = 'block'; // Show the params container
-            clearTimeout(hideParamsTimeout); // Clear any existing timeout
-            hideParamsTimeout = setTimeout(function() {
-                document.querySelector('.params-container').style.display = 'none'; // Hide the params container after 3 seconds
-            }, 2000);
-        });
+        function updateHexCode(inputId, color) {
+            const hexCodeElement = document.querySelector(`#${inputId} + .hex-code`);
+            hexCodeElement.textContent = color;
+        }
 
-        let hideParamsTimeout;
+        function copyHexCode(inputId) {
+            const hexCode = document.querySelector(`#${inputId} + .hex-code`).textContent;
+            navigator.clipboard.writeText(hexCode);
+            alert(`Copied color code: ${hexCode}`);
+        }
     </script>
 </body>
 </html>
