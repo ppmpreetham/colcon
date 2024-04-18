@@ -31,28 +31,45 @@
             color: inherit;
         }
 
+        .params-container {
+            display: none;
+             /* Initially hide the params container */  
+        }
+
+        #flip-button {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
     <style id="custom-font-style"></style>
 </head>
 <body>
-    <div id="params">
-        <h1>ColCon</h1>
-        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 0; left: 0;">
+    <div id="params" class="params-container">
+        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 30px; left: 30px;">
             <label for="background-color-input" style="margin-top: 0.7vh;">Background color:</label>
             <input type="color" id="background-color-input" oninput="changeBackgroundColor()" value="#ffffff">
         </div>
 
-        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 30px; left: 0;">
-            <label for="foreground-color-input" style="margin-top: 0.7vh;">Foreground color:</label>
-            <input type="color" id="foreground-color-input" oninput="changeForegroundColor()" value="#ffffff">
+        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 60px; left: 30px;">
+            <label for="foreground-color-input" style="margin-top: 0.7vh;">Text color:</label>
+            <input type="color" id="foreground-color-input" style="outline: none;" oninput="changeForegroundColor()" value="#ffffff">
         </div>
 
-        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 60px; left: 0;">
+        <button id="flip-button">Flip Colors</button>
+
+        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 90px; left: 30px;">
             <label for="font-size-input">Font size (pt):</label>
             <input type="number" id="font-size-input" min="10" max="50" value="30" oninput="changeFontSize()">
         </div>
 
-        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 90px; left: 0;">
+        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 120px; left: 30px;">
             <label for="font-file">Font Family:</label>
             <input type="file" id="font-file" accept=".ttf,.otf,.woff,.woff2" onchange="loadCustomFont()">
         </div>
@@ -62,7 +79,7 @@
             <p id="contrast-result"></p>
         </div>
     </div>
-    <p id="content" style="font-family: inherit; font-size: 30px; outline: none;" contenteditable>The quick brown fox jumps over the lazy dog</p>
+    <p id="content" style="font-family: inherit; font-size: 40px;text-align: center; outline: none;" contenteditable>The quick brown fox jumps over the lazy dog <br>♠︎♣♥︎♦︎</p>
 
     <script>
         function changeFontSize() {
@@ -73,6 +90,7 @@
         function changeBackgroundColor() {
             const color = document.getElementById('background-color-input').value;
             document.body.style.backgroundColor = color;
+            currentBackgroundColor = color;
             updateLuminanceValue();
             checkContrastRatio();
         }
@@ -80,6 +98,7 @@
         function changeForegroundColor() {
             const color = document.getElementById('foreground-color-input').value;
             document.getElementById('content').style.color = color;
+            currentForegroundColor = color;
             updateLuminanceValue();
             checkContrastRatio();
         }
@@ -143,9 +162,22 @@
             paramsDiv.style.color = contrastRatio >= AA_Large_Text ? 'green' : 'red'; // Update text color based on AA Large Text standard
         }
 
+        document.getElementById('flip-button').addEventListener('click', function() {
+            const tempBackgroundColor = currentBackgroundColor;
+            const tempForegroundColor = currentForegroundColor;
 
+            // Swap the background and foreground colors
+            document.body.style.backgroundColor = tempForegroundColor;
+            document.getElementById('content').style.color = tempBackgroundColor;
+            document.getElementById('background-color-input').value = tempForegroundColor;
+            document.getElementById('foreground-color-input').value = tempBackgroundColor;
 
+            currentBackgroundColor = tempForegroundColor;
+            currentForegroundColor = tempBackgroundColor;
 
+            updateLuminanceValue();
+            checkContrastRatio();
+        });
 
         function loadCustomFont() {
             const fontFile = document.getElementById('font-file').files[0];
@@ -201,6 +233,17 @@
                     return '';
             }
         }
+
+        document.addEventListener('mousemove', function() {
+            document.querySelector('.params-container').style.display = 'block'; // Show the params container
+            clearTimeout(hideParamsTimeout); // Clear any existing timeout
+            hideParamsTimeout = setTimeout(function() {
+                document.querySelector('.params-container').style.display = 'none'; // Hide the params container after 3 seconds
+            }, 2000);
+        });
+
+        let hideParamsTimeout;
+
     </script>
 </body>
 </html>
