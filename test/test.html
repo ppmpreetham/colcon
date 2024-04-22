@@ -18,14 +18,14 @@
             <div class="item">
                 <div class="coolinput">
                     <label for="input" class="text">Foreground Color</label>
-                    <input type="text" placeholder="#FFFFFF" name="input" class="input">
+                    <input type="text" placeholder="#FFFFFF" name="input" class="input" oninput="changeForegroundColor()">
                 </div>
             </div>
 
             <div class="item">
                 <div class="coolinput">
                     <label for="input" class="text">Background Color</label>
-                    <input type="text" placeholder="#000000" name="input" class="input">
+                    <input type="text" placeholder="#000000" name="input" class="input" oninput="changeBackgroundColor()">
                 </div>
             </div>
 
@@ -39,13 +39,13 @@
             <div class="item">
                 <div class="coolinput">
                     <label for="input" class="text">Font Size</label>
-                    <input type="text" placeholder="14pt" name="input" class="input">
+                    <input type="text" placeholder="32pt" name="input" class="input" oninput="changeFontSize()">
                 </div>
             </div>
         </div>
 
         <div style="margin-top: 75pt;">
-            <div style="font-size: 33pt">ABCDEFGHIJKLMNOPQRSTUVWXYZ <br> abcdefghijklmnopqrstuvwxyz <br> The quick brown fox jumps over the lazy dog <br> ♠︎♣︎♥︎♦︎ </div>
+            <p id="content" style="font-family: inherit; font-size: 33pt; outline: none;" contenteditable spellcheck="false">ABCDEFGHIJKLMNOPQRSTUVWXYZ <br> abcdefghijklmnopqrstuvwxyz <br> The quick brown fox jumps over the lazy dog <br> ♠︎♣︎♥︎♦︎ </p>
         </div>
 
         <div class="right" style="font-size: 14pt;" >Color Contrast</div>
