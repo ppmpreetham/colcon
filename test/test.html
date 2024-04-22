@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColCon</title>
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <script src="script.js"></script>
+    <div style="margin-left: 65pt; margin-top: 25pt;">
+        <div style="display: flex; align-items: center;">
+            <div class="title">ColCon</div>
+
+            <div class="item">
+                <div class="coolinput">
+                    <label for="input" class="text">Foreground Color</label>
+                    <input type="text" placeholder="#FFFFFF" name="input" class="input">
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="coolinput">
+                    <label for="input" class="text">Background Color</label>
+                    <input type="text" placeholder="#000000" name="input" class="input">
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="coolinput">
+                    <label for="input" class="text">Font Family</label>
+                    <input type="text" placeholder="Select your font" name="input" class="input">
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="coolinput">
+                    <label for="input" class="text">Font Size</label>
+                    <input type="text" placeholder="14pt" name="input" class="input">
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 75pt;">
+            <div style="font-size: 33pt">ABCDEFGHIJKLMNOPQRSTUVWXYZ <br> abcdefghijklmnopqrstuvwxyz <br> The quick brown fox jumps over the lazy dog <br> ♠︎♣︎♥︎♦︎ </div>
+        </div>
+
+        <div class="right" style="font-size: 14pt;" >Color Contrast</div>
+        <div class="right" style="font-size: 35pt;">7.05</div>
+
+        <table class="right" style="border-collapse: collapse; float: right;">
+            <thead>
+                <tr>
+                    <th style="padding: 8px; border: 1px solid #ccc;">Level</th>
+                    <th style="padding: 8px; border: 1px solid #ccc;">Graphics</th>
+                    <th style="padding: 8px; border: 1px solid #ccc;">Large Text</th>
+                    <th style="padding: 8px; border: 1px solid #ccc;">Normal Text</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ccc;">AA</td>
+                    <td id="aa-graphic" style="padding: 8px; border: 1px solid #ccc;"></td>
+                    <td id="aa-large-text" style="padding: 8px; border: 1px solid #ccc;"></td>
+                    <td id="aa-normal-text" style="padding: 8px; border: 1px solid #ccc;"></td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ccc;">AAA</td>
+                    <td id="aaa-graphic" style="padding: 8px; border: 1px solid #ccc;"></td>
+                    <td id="aaa-large-text" style="padding: 8px; border: 1px solid #ccc;"></td>
+                    <td id="aaa-normal-text" style="padding: 8px; border: 1px solid #ccc;"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+  
+</body>
+</html>
