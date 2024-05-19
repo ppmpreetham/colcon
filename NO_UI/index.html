@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColCon</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #custom-font-style {
+            display: none;
+        }
+
+        .pass {
+            color: green;
+        }
+
+        .fail {
+            color: red;
+        }
+
+        #params {
+            color: inherit;
+        }
+
+        #flip-button {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .color-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-container input[type="color"] {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border: none;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .color-container .hex-code {
+            cursor: pointer;
+        }
+
+    </style>
+    <style id="custom-font-style"></style>
+</head>
+<body>
+    <div id="params">
+        <div class="color-container" style="position: absolute; top: 30px; left: 30px;">
+            <label for="background-color-input" style="margin-top: 0.7vh;">Background color:</label>
+            <br>
+            <div class="color-box">
+                <input type="color" class="color-input" id="background-color-input" oninput="changeBackgroundColor()" value="#DB592A">
+                <span class="hex-code" onclick="copyHexCode('background-color-input')">#ffffff</span>
+            </div>
+        </div>
+        
+        <div class="color-container" style="position: absolute; top: 80px; left: 30px;">
+            <label for="foreground-color-input" style="margin-top: 0.7vh;">Text color:</label>
+            <br>
+            <div class="color-box">
+                <input type="color" class="color-input" id="foreground-color-input" oninput="changeForegroundColor()" value="#DB592A">
+                <span class="hex-code" onclick="copyHexCode('foreground-color-input')">#ffffff</span>
+            </div>
+        </div>
+        <button id="flip-button">Flip Colors</button>
+        
+        <br>
+        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 140px; left: 30px;">
+            <label for="font-size-input">Font size (pt):</label>
+            <input type="number" id="font-size-input" min="10" max="50" value="30" oninput="changeFontSize()">
+        </div>
+        <br>
+        <div style="display: flex; align-items: flex-start; justify-content: flex-start; position: absolute; top: 170px; left: 30px;">
+            <label for="font-file">Font Family:</label>
+            <input type="file" id="font-file" accept=".ttf,.otf,.woff,.woff2" onchange="loadCustomFont()">
+        </div>
+
+        <div style="position: absolute; top: 170px; left: 30px;">
+            <br>
+            <p id="luminance-output"></p>
+            <p id="contrast-result"></p>
+        </div>
+        
+        <div style="position: absolute; top: 80px; right: 30px;">
+            <table style="border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="padding: 8px; border: 1px solid #ccc;">Level</th>
+                        <th style="padding: 8px; border: 1px solid #ccc;">Graphics</th>
+                        <th style="padding: 8px; border: 1px solid #ccc;">Large Text</th>
+                        <th style="padding: 8px; border: 1px solid #ccc;">Normal Text</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ccc;">AA</td>
+                        <td id="aa-graphic" style="padding: 8px; border: 1px solid #ccc;"></td>
+                        <td id="aa-large-text" style="padding: 8px; border: 1px solid #ccc;"></td>
+                        <td id="aa-normal-text" style="padding: 8px; border: 1px solid #ccc;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ccc;">AAA</td>
+                        <td id="aaa-graphic" style="padding: 8px; border: 1px solid #ccc;"></td>
+                        <td id="aaa-large-text" style="padding: 8px; border: 1px solid #ccc;"></td>
+                        <td id="aaa-normal-text" style="padding: 8px; border: 1px solid #ccc;"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <p id="content" style="font-family: inherit; font-size: 40px;text-align: center; outline: none;" contenteditable>The quick brown fox jumps over the lazy dog <br>♠︎♣︎♥︎♦︎</p>
+
+    <script>
+        let currentBackgroundColor = '#ffffff';
+        let currentForegroundColor = '#ffffff';
+
+        function changeFontSize() {
+            const fontSize = document.getElementById('font-size-input').value;
+            document.getElementById('content').style.fontSize = fontSize + 'pt';
+        }
+
+        function changeBackgroundColor() {
+            const color = document.getElementById('background-color-input').value;
+            document.body.style.backgroundColor = color;
+            currentBackgroundColor = color;
+            updateLuminanceValue();
+            checkContrastRatio();
+            updateHexCode('background-color-input', color);
+        }
+
+        function changeForegroundColor() {
+            const color = document.getElementById('foreground-color-input').value;
+            document.getElementById('content').style.color = color;
+            currentForegroundColor = color;
+            updateLuminanceValue();
+            checkContrastRatio();
+            updateHexCode('foreground-color-input', color);
+        }
+
+        function getLuminance(id){
+            // https://www.w3.org/TR/WCAG21/#dfn-relative-luminance
+            const color = document.getElementById(id).value;
+            const r = parseInt(color.substring(1, 3), 16) / 255;
+            const g = parseInt(color.substring(3, 5), 16) / 255;
+            const b = parseInt(color.substring(5, 7), 16) / 255;
+
+            const R = r <= 0.03928 ? r / 12.92 : ((r + 0.055) / 1.055) ** 2.4;
+            const G = g <= 0.03928 ? g / 12.92 : ((g + 0.055) / 1.055) ** 2.4;
+            const B = b <= 0.03928 ? b / 12.92 : ((b + 0.055) / 1.055) ** 2.4;
+
+            const luminance = 0.2126 * R + 0.7152 * G + 0.0722 * B;
+            return luminance;
+        }
+
+        function contrast_ratio(){
+            const L1 = getLuminance('background-color-input');
+            const L2 = getLuminance('foreground-color-input');
+            const ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+            return ratio;
+        }
+
+        function updateLuminanceValue() {
+            const backgroundLuminance = getLuminance('background-color-input');
+            const foregroundLuminance = getLuminance('foreground-color-input');
+            const contrastRatio = contrast_ratio();
+
+            const luminanceOutput = document.getElementById('luminance-output');
+            luminanceOutput.innerHTML = `Background luminance: ${backgroundLuminance.toFixed(3)}<br>
+            Foreground luminance: ${foregroundLuminance.toFixed(3)}<br>
+            Contrast ratio: ${contrastRatio.toFixed(3)}`;
+        }
+
+        function checkContrastRatio() {
+            const contrastRatio = contrast_ratio();
+            const contrastResultEl = document.getElementById('contrast-result');
+            const paramsDiv = document.getElementById('params');
+
+            const AA_Large_Text = 3;
+            const AA_Normal_Text = 4.5;
+            const AA_Graphic_Components = 3;
+            const AAA_Large_Text = 4.5;
+            const AAA_Normal_Text = 7;
+            const AAA_Graphic_Components = 4.5;
+
+            let results = ''; // Store results dynamically
+
+            // Check each condition separately and append tick marks
+            document.getElementById('aa-graphic').innerHTML = contrastRatio >= AA_Graphic_Components ? '✔️' : '❌';
+            document.getElementById('aa-large-text').innerHTML = contrastRatio >= AA_Large_Text ? '✔️' : '❌';
+            document.getElementById('aa-normal-text').innerHTML = contrastRatio >= AA_Normal_Text ? '✔️' : '❌';
+            document.getElementById('aaa-graphic').innerHTML = contrastRatio >= AAA_Graphic_Components ? '✔️' : '❌';
+            document.getElementById('aaa-large-text').innerHTML = contrastRatio >= AAA_Large_Text ? '✔️' : '❌';
+            document.getElementById('aaa-normal-text').innerHTML = contrastRatio >= AAA_Normal_Text ? '✔️' : '❌';
+
+            contrastResultEl.innerHTML = results; // Update contrast result
+            paramsDiv.style.color = contrastRatio >= AA_Large_Text ? 'green' : 'red'; // Update text color based on AA Large Text standard
+        }
+
+        document.getElementById('flip-button').addEventListener('click', function() {
+            // Swap the background and foreground colors
+            document.body.style.backgroundColor = currentForegroundColor;
+            document.getElementById('content').style.color = currentBackgroundColor;
+            document.getElementById('background-color-input').value = currentForegroundColor;
+            document.getElementById('foreground-color-input').value = currentBackgroundColor;
+
+            // Update the current colors
+            [currentBackgroundColor, currentForegroundColor] = [currentForegroundColor, currentBackgroundColor];
+
+            updateLuminanceValue();
+            checkContrastRatio();
+            updateHexCode('background-color-input', currentBackgroundColor);
+            updateHexCode('foreground-color-input', currentForegroundColor);
+        });
+
+        function loadCustomFont() {
+            const fontFile = document.getElementById('font-file').files[0];
+
+            // Font Face API !?
+            if ('FontFace' in window) {
+                const fontFamily = 'My Custom Font';
+
+                const customFontStyle = document.getElementById('custom-font-style');
+                customFontStyle.innerHTML = `
+                    @font-face {
+                        font-family: '${fontFamily}';
+                        src: url(${URL.createObjectURL(fontFile)}) format('${getFontFormat(fontFile.name)}');
+                        font-weight: normal;
+                        font-style: normal;
+                    }
+
+                    #content {
+                        font-family: '${fontFamily}', sans-serif;
+                    }
+                `;
+
+                const customFont = new FontFace(fontFamily, `
+                    url(${URL.createObjectURL(fontFile)}) format('${getFontFormat(fontFile.name)}')
+                `, {
+                    weight: 'normal',
+                    style: 'normal'
+                });
+                
+                customFont.load().then((font) => {
+                    document.fonts.add(font);
+                    document.getElementById('content').style.fontFamily = `"${fontFamily}", sans-serif`;
+                }).catch((error) => {
+                    console.error('Error loading custom font:', error);
+                });
+            } else {
+                console.error('Font Face API is not supported in this browser.');
+            }
+        }
+
+        function getFontFormat(fileName) {
+            const extension = fileName.split('.').pop().toLowerCase();
+            switch (extension) {
+                case 'ttf':
+                    return 'truetype';
+                case 'otf':
+                    return 'opentype';
+                case 'woff':
+                    return 'woff';
+                case 'woff2':
+                    return 'woff2';
+                default:
+                    return '';
+            }
+        }
+
+        function updateHexCode(inputId, color) {
+            const hexCodeElement = document.querySelector(`#${inputId} + .hex-code`);
+            hexCodeElement.textContent = color;
+        }
+
+        function copyHexCode(inputId) {
+            const hexCode = document.querySelector(`#${inputId} + .hex-code`).textContent;
+            navigator.clipboard.writeText(hexCode);
+            alert(`Copied color code: ${hexCode}`);
+        }
+    </script>
+</body>
+</html>
