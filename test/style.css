@@ -10,6 +10,10 @@
     font-family: Inter;
 }
 
+body {
+  background-color: #FFFFFF; /* Default background color */
+}
+
 .title{
     margin-top: auto;
     font-family: Inter;
