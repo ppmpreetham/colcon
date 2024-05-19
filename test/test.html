@@ -10,65 +10,6 @@
 </head>
 
 <body>
-    <script src="script.js"></script>
-    <script>function changeForegroundColor() {
-        const input = document.querySelector('input[oninput="changeForegroundColor()"]');
-        const content = document.getElementById('content');
-        const color = input.value.replace('#', '');
-        if (/^[0-9A-F]{6}$/i.test(color)) {
-          content.style.color = '#' + color;
-        }
-        
-      }
-  
-    function changeBackgroundColor() {
-      const input = document.querySelector('input[oninput="changeBackgroundColor()"]');
-      const body = document.querySelector('body');
-      const color = input.value.replace('#', '');
-      if (/^[0-9A-F]{6}$/i.test(color)) {
-        body.style.backgroundColor = '#' + color;
-      }
-    }
-
-    const coolinputLabels = document.querySelectorAll('.coolinput label.text');
-    coolinputLabels.forEach(label => {
-      label.style.background = color;
-    });
-
-    function getLuminance(inputId) {
-      const inputElement = document.getElementById(inputId);
-      const color = inputElement.value.replace('#', '');
-      const r = parseInt(color.substring(0, 2), 16) / 255;
-      const g = parseInt(color.substring(2, 4), 16) / 255;
-      const b = parseInt(color.substring(4, 6), 16) / 255;
-      const R = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
-      const G = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
-      const B = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
-      return 0.2126 * R + 0.7152 * G + 0.0722 * B;
-    }
-
-    function contrastRatio() {
-      const L1 = getLuminance('foreground-color-input');
-      const L2 = getLuminance('background-color-input');
-      const ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
-      return ratio.toFixed(2);
-    }
-
-    // Listen to the inputs
-
-    const foregroundColorInput = document.getElementById('foreground-color-input');
-    const backgroundColorInput = document.getElementById('background-color-input');
-    const contrastRatioElement = document.querySelector('.right + .right');
-    
-    foregroundColorInput.addEventListener('input', updateContrastRatio);
-    backgroundColorInput.addEventListener('input', updateContrastRatio);
-    
-    function updateContrastRatio() {
-      const ratio = contrastRatio();
-      contrastRatioElement.textContent = `Color contrast: ${ratio}`;
-    }
-
-  </script>
 
     <div style="margin-left: 65pt; margin-top: 25pt;">
         <div style="display: flex; align-items: center;">
@@ -76,15 +17,15 @@
 
             <div class="item">
                 <div class="coolinput">
-                    <label for="input" class="text">Foreground Color</label>
-                    <input type="text" placeholder="#FFFFFF" name="input" class="input" oninput="changeForegroundColor()">
+                    <label for="foreground-color-input" class="text">Foreground Color</label>
+                    <input type="text" id="foreground-color-input" placeholder="#FFFFFF" name="input" class="input" oninput="changeForegroundColor()">
                 </div>
             </div>
-
+            
             <div class="item">
                 <div class="coolinput">
-                    <label for="input" class="text">Background Color</label>
-                    <input type="text" placeholder="#000000" name="input" class="input" oninput="changeBackgroundColor()">
+                    <label for="background-color-input" class="text">Background Color</label>
+                    <input type="text" id="background-color-input" placeholder="#000000" name="input" class="input" oninput="changeBackgroundColor()">
                 </div>
             </div>
 
@@ -107,9 +48,8 @@
             <p id="content" style="font-family: inherit; font-size: 33pt; outline: none;" contenteditable spellcheck="false">ABCDEFGHIJKLMNOPQRSTUVWXYZ <br> abcdefghijklmnopqrstuvwxyz <br> The quick brown fox jumps over the lazy dog <br> ♠︎♣︎♥︎♦︎ </p>
         </div>
 
-        <div class="right" style="font-size: 14pt;" >Color Contrast</div>
-        <div class="right" style="font-size: 35pt;">Color contrast: 7.05</div>
-
+        <div class="right-text" style="font-size: 14pt;">Color Contrast</div>
+        <div class="right contrast-ratio-container" style="font-size: 35pt;">21</div>
         <table class="right" style="border-collapse: collapse; float: right;">
             <thead>
                 <tr>
@@ -136,5 +76,68 @@
         </table>
     </div>
   
+    <script src="script.js"></script>
+    <script>function changeForegroundColor() {
+        const input = document.querySelector('input[oninput="changeForegroundColor()"]');
+        const content = document.getElementById('content');
+        const color = input.value.replace('#', '');
+        if (/^[0-9A-F]{6}$/i.test(color)) {
+          content.style.color = '#' + color;
+        }
+        updateContrastRatio();
+    }
+    
+    function changeBackgroundColor() {
+        const input = document.querySelector('input[oninput="changeBackgroundColor()"]');
+        const body = document.querySelector('body');
+        const color = input.value.replace('#', '');
+        if (/^[0-9A-F]{6}$/i.test(color)) {
+            body.style.backgroundColor = '#' + color;
+        }
+        updateContrastRatio();
+    }
+
+    const coolinputLabels = document.querySelectorAll('.coolinput label.text');
+    coolinputLabels.forEach(label => {
+      label.style.background = color;
+    });
+
+    function getLuminance(inputId) {
+      const inputElement = document.getElementById(inputId);
+      const color = inputElement.value.replace('#', '');
+      const r = parseInt(color.substring(0, 2), 16) / 255;
+      const g = parseInt(color.substring(2, 4), 16) / 255;
+      const b = parseInt(color.substring(4, 6), 16) / 255;
+      const R = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
+      const G = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
+      const B = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
+      return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+    }
+
+    function contrastRatio() {
+        const L1 = getLuminance('foreground-color-input');
+        const L2 = getLuminance('background-color-input');
+        const ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+        document.querySelector('.right').textContent = ratio.toFixed(2);
+        return ratio.toFixed(2);
+    }
+
+    // Listen to the inputs
+
+    const foregroundColorInput = document.getElementById('foreground-color-input');
+    const backgroundColorInput = document.getElementById('background-color-input');
+    const contrastRatioElement = document.querySelector('.contrast-ratio-container');
+
+    foregroundColorInput.addEventListener('input', updateContrastRatio);
+    backgroundColorInput.addEventListener('input', updateContrastRatio);
+
+    function updateContrastRatio() {
+        const ratio = contrastRatio();
+        contrastRatioElement.textContent = `Color contrast: ${ratio}`;
+    }
+
+    updateContrastRatio();
+
+  </script>
 </body>
 </html>

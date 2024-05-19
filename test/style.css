@@ -28,6 +28,10 @@ body {
   margin-left: 70pt;
 }
 
+.right-text{
+  margin-right: 65pt; align-items: flex-end; text-align: right;
+}
+
 .right{
   margin-right: 65pt; align-items: flex-end; text-align: right;
 }
