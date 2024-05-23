@@ -63,22 +63,23 @@
             <tbody>
                 <tr>
                     <td style="padding: 8px; border: 1px solid #ccc;">AA</td>
-                    <td id="aa-graphic" style="padding: 8px; border: 1px solid #ccc;"></td>
-                    <td id="aa-large-text" style="padding: 8px; border: 1px solid #ccc;"></td>
-                    <td id="aa-normal-text" style="padding: 8px; border: 1px solid #ccc;"></td>
+                    <td id="aa-graphic" style="padding: 8px; border: 1px solid #ccc;">Yes</td>
+                    <td id="aa-large-text" style="padding: 8px; border: 1px solid #ccc;">Yes</td>
+                    <td id="aa-normal-text" style="padding: 8px; border: 1px solid #ccc;">Yes</td>
                 </tr>
                 <tr>
                     <td style="padding: 8px; border: 1px solid #ccc;">AAA</td>
-                    <td id="aaa-graphic" style="padding: 8px; border: 1px solid #ccc;"></td>
-                    <td id="aaa-large-text" style="padding: 8px; border: 1px solid #ccc;"></td>
-                    <td id="aaa-normal-text" style="padding: 8px; border: 1px solid #ccc;"></td>
+                    <td id="aaa-graphic" style="padding: 8px; border: 1px solid #ccc;">Yes</td>
+                    <td id="aaa-large-text" style="padding: 8px; border: 1px solid #ccc;">Yes</td>
+                    <td id="aaa-normal-text" style="padding: 8px; border: 1px solid #ccc;">Yes</td>
                 </tr>
             </tbody>
         </table>
     </div>
   
     <script src="script.js"></script>
-    <script>function changeForegroundColor() {
+    <script>
+    function changeForegroundColor() {
         const input = document.querySelector('input[oninput="changeForegroundColor()"]');
         const content = document.getElementById('content');
         const color = input.value.replace('#', '');
@@ -133,24 +134,31 @@
     foregroundColorInput.addEventListener('input', updateContrastRatio);
     backgroundColorInput.addEventListener('input', updateContrastRatio);
 
+    const aaGraphicCell = document.getElementById('aa-graphic');
+    const aaLargeTextCell = document.getElementById('aa-large-text');
+    const aaNormalTextCell = document.getElementById('aa-normal-text');
+    const aaaGraphicCell = document.getElementById('aaa-graphic');
+    const aaaLargeTextCell = document.getElementById('aaa-large-text');
+    const aaaNormalTextCell = document.getElementById('aaa-normal-text');
+
     function updateContrastRatio() {
         const ratio = contrastRatio();
-        contrastRatioElement.textContent = `Color contrast: ${ratio}`;
+        contrastRatioElement.textContent = ratio;
 
-    // Update the table based on the contrast ratio
-    const aaGraphic = ratio >= 3 ? '&#10004;' : '&#10008;';
-    const aaLargeText = ratio >= 3 ? '&#10004;' : '&#10008;';
-    const aaNormalText = ratio >= 4.5 ? '&#10004;' : '&#10008;';
-    const aaaGraphic = ratio >= 4.5 ? '&#10004;' : '&#10008;';
-    const aaaLargeText = ratio >= 3 ? '&#10004;' : '&#10008;';
-    const aaaNormalText = ratio >= 7 ? '&#10004;' : '&#10008;';
+        // Update the table based on the contrast ratio
+        const aaGraphic = ratio >= 3 ? 'Yes' : 'No';
+        const aaLargeText = ratio >= 3 ? 'Yes' : 'No';
+        const aaNormalText = ratio >= 4.5 ? 'Yes' : 'No';
+        const aaaGraphic = ratio >= 4.5 ? 'Yes' : 'No';
+        const aaaLargeText = ratio >= 4.5 ? 'Yes' : 'No';
+        const aaaNormalText = ratio >= 7 ? 'Yes' : 'No';
 
-    document.getElementById('aa-graphic').innerHTML = aaGraphic;
-    document.getElementById('aa-large-text').innerHTML = aaLargeText;
-    document.getElementById('aa-normal-text').innerHTML = aaNormalText;
-    document.getElementById('aaa-graphic').innerHTML = aaaGraphic;
-    document.getElementById('aaa-large-text').innerHTML = aaaLargeText;
-    document.getElementById('aaa-normal-text').innerHTML = aaaNormalText;
+        aaGraphicCell.textContent = aaGraphic;
+        aaLargeTextCell.textContent = aaLargeText;
+        aaNormalTextCell.textContent = aaNormalText;
+        aaaGraphicCell.textContent = aaaGraphic;
+        aaaLargeTextCell.textContent = aaaLargeText;
+        aaaNormalTextCell.textContent = aaaNormalText;
     }
 
     updateContrastRatio();
