@@ -68,29 +68,24 @@ body {
   outline: none;
 }
 
-.coolfileinput{
-  display: none;
-}
-.coolfileinput label{
-  
-  height: 100px;
-  width: 150px;
-  border-radius: 6px;
-  border: 1px dashed #999;
-}
-
 input[type="file"] {
   display: none;
 }
 .custom-file-upload {
+  height: 12.34px;
   padding: 11px 10px;
   font-size: 0.75rem;
+  width: 150px;
   border: 1px #000000 solid;
   border-radius: 5px;
   background: #ffffff;
-
   display: inline-block;
   cursor: pointer;
+  vertical-align: middle;
+}
+
+i{
+  
 }
 
 table.right {
