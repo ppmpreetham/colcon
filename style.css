@@ -10,6 +10,10 @@
     font-family: Inter;
 }
 
+.diff{
+  mix-blend-mode: difference;
+}
+
 body {
   background-color: #FFFFFF; /* Default background color */
 }
@@ -54,6 +58,7 @@ body {
   color: #000000;
   font-weight: 700;
   position: relative;
+  border-radius: 2px;
   top: 0.5rem;
   margin: 0 0 0 7px;
   padding: 0 3px;

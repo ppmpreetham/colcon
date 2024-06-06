@@ -53,7 +53,7 @@ function contrastRatio() {
     document.getElementById('aaa-graphic').textContent = ratio >= 4.5 ? "Yes" : "No";
     document.getElementById('aaa-large-text').textContent = ratio >= 4.5 ? "Yes" : "No";
     document.getElementById('aaa-normal-text').textContent = ratio >= 7 ? "Yes" : "No";
-    return ratio; // return the numerical ratio
+    return ratio.toFixed(2); // return the numerical ratio
 }
 
 // Listen to the inputs
