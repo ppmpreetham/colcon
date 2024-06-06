@@ -36,6 +36,11 @@ body {
   margin-right: 65pt; align-items: flex-end; text-align: right;
 }
 
+.botomm{
+  position: fixed;
+  bottom: 25pt;
+  right: 0;
+}
 .coolinput {
   display: flex;
   flex-direction: column;
