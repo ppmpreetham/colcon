@@ -10,40 +10,34 @@
     <link rel="preconnect" href="https://rsms.me/">
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="src\icons\logo.png" type="image/x-icon">
+    <link rel="icon" href="src/icons/logo.png" type="image/x-icon">
 </head>
-
 <body>
-
     <div style="margin-left: 65pt; margin-top: 25pt;">
         <div style="display: flex; align-items: center;">
             <img src="src/icons/logo.png" alt="colcon" width="32pt" style="margin-top: 8px;">
             <div class="title">olCon</div>
-
             <div class="item">
                 <div class="coolinput">
                     <label for="foreground-color-input" class="text">Foreground Color</label>
                     <input type="text" id="foreground-color-input" placeholder="#000000" name="input" class="input" oninput="changeForegroundColor()">
                 </div>
             </div>
-            
             <div class="item">
                 <div class="coolinput">
                     <label for="background-color-input" class="text">Background Color</label>
                     <input type="text" id="background-color-input" placeholder="#FFFFFF" name="input" class="input" oninput="changeBackgroundColor()">
                 </div>
             </div>
-            
             <div class="item">
                 <div class="coolinput">
                     <label for="file-input" class="text">Font Family</label>
                     <label for="file-upload" class="custom-file-upload">
-                        <img src="src\icons\upload.gif" alt="upload" width="10" height="10">ㅤFont Family
+                        <img src="src/icons/upload.gif" alt="upload" width="10" height="10">ㅤFont Family
                     </label>
                     <input id="file-upload" type="file" accept=".ttf,.otf,.woff,.woff2"/>
                 </div>
             </div>
-
             <div class="item">
                 <div class="coolinput">
                     <label for="input" class="text">Font Size</label>
@@ -51,15 +45,14 @@
                 </div>
             </div>
         </div>
-
         <div style="margin-top: 75pt; margin-right: 65pt;">
-            <p id="content" style="font-family: inherit; font-size: 33pt; outline: none;" contenteditable spellcheck="false">ABCDEFGHIJKLMNOPQRSTUVWXYZ <br> abcdefghijklmnopqrstuvwxyz <br> The quick brown fox jumps over the lazy dog <br> ♠︎♣︎♥︎♦︎ </p>
+            <p id="content" class="font-changable-text" style="font-family: inherit; font-size: 33pt; outline: none;" contenteditable spellcheck="false">
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ <br> abcdefghijklmnopqrstuvwxyz <br> The quick brown fox jumps over the lazy dog <br> ♠︎♣︎♥︎♦︎
+            </p>
         </div>
-
         <div class="bottomm">
             <div class="right-text" style="font-size: 14pt;">Color Contrast</div>
             <div class="right contrast-ratio-container" style="font-size: 35pt;">21</div>
-            
             <table class="right" style="border-collapse: collapse; float: right;">
                 <thead>
                     <tr>
@@ -86,7 +79,6 @@
             </table>
         </div>
     </div>
-  
     <script src="script.js"></script>
 </body>
 </html>

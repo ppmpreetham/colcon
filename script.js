@@ -57,7 +57,6 @@ function contrastRatio() {
 }
 
 // Listen to the inputs
-
 const foregroundColorInput = document.getElementById('foreground-color-input');
 const backgroundColorInput = document.getElementById('background-color-input');
 const contrastRatioElement = document.querySelector('.contrast-ratio-container');
@@ -65,10 +64,28 @@ const contrastRatioElement = document.querySelector('.contrast-ratio-container')
 foregroundColorInput.addEventListener('input', updateContrastRatio);
 backgroundColorInput.addEventListener('input', updateContrastRatio);
 
-
 function updateContrastRatio() {
     const ratio = parseFloat(contrastRatio());
     contrastRatioElement.textContent = ratio;
 }
 
 updateContrastRatio();
+
+// Changing Fonts
+document.getElementById('file-upload').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const fontData = e.target.result;
+            const font = new FontFace('CustomUploadedFont', `url(data:font/ttf;base64,${btoa(String.fromCharCode(...new Uint8Array(fontData)))})`);
+            font.load().then(function(loadedFont) {
+                document.fonts.add(loadedFont);
+                document.querySelector('.font-changable-text').style.fontFamily = 'CustomUploadedFont, sans-serif';
+            }).catch(function(error) {
+                console.error('Font loading error:', error);
+            });
+        };
+        reader.readAsArrayBuffer(file);
+    }
+});

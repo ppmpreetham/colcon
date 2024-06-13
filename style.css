@@ -7,7 +7,7 @@
   }
 
 *{
-    font-family: Inter;
+    /* font-family: Inter; */
 }
 
 .diff{
@@ -94,10 +94,6 @@ input[type="file"] {
   vertical-align: middle;
 }
 
-i{
-  
-}
-
 table.right {
   border-collapse: separate;
   border-spacing: 0;
@@ -115,4 +111,8 @@ table.right th:last-child,
 table.right td:last-child {
   border-top-right-radius: 6pt;
   border-bottom-right-radius: 6pt;
+}
+
+.custom-font {
+  font-family: 'CustomUploadedFont', sans-serif;
 }
